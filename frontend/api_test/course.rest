@@ -1,0 +1,38 @@
+# # CREATE A NEW course
+# POST http://localhost:8080/api/v1/course
+# Content-Type: application/json
+
+# {
+#       "course_name": "Introduction to English",
+#       "credit_unit": 2,
+#       "course_code": "GST 101",
+# }
+
+
+# # GET ALL course
+# GET http://localhost:8080/api/v1/courses
+# Content-Type: application/json
+
+
+
+# # GET course BY ID
+GET http://localhost:8080/api/v1/courses/1
+Content-Type: application/json
+
+
+
+# # UPDATE course BY ID
+# PUT http://localhost:8080/api/v1/course/1
+# Content-Type: application/json
+
+# {
+#       "course_name": "Introduction to English",
+#       "credit_unit": 2,
+#       "course_code": "GST 101",
+# }
+
+
+
+# # DELETE course BY ID
+# DELETE http://localhost:8080/api/v1/course/1
+# Content-Type: application/json

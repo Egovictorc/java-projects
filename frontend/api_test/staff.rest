@@ -1,0 +1,42 @@
+# # CREATE A NEW STAFF
+# POST http://localhost:8080/api/v1/staff
+# Content-Type: application/json
+
+# {
+#       "first_name": "emeka",
+#       "last_name": "Anyim",
+#       "phone": 9023212125,
+#       "email": "emekaanyim@gmail.com",
+#       "level": 10
+# }
+
+
+# # GET ALL STAFF
+# GET http://localhost:8080/api/v1/staff
+# Content-Type: application/json
+
+
+
+# # GET STAFF BY ID
+# GET http://localhost:8080/api/v1/staff/1
+# Content-Type: application/json
+
+
+
+# # UPDATE STAFF BY ID
+# PUT http://localhost:8080/api/v1/staff/1
+# Content-Type: application/json
+
+# {
+#       "first_name": "emeka",
+#       "last_name": "Anyim",
+#       "phone": 9023212125,
+#       "email": "emekaanyim@gmail.com",
+#       "level": 9
+# }
+
+
+
+# # DELETE STAFF BY ID
+# DELETE http://localhost:8080/api/v1/staff/1
+# Content-Type: application/json
