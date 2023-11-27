@@ -3,6 +3,21 @@ import { PATH_PAGE } from "./routes/paths";
 const navConfig = [
 
     {
+        header: "Courses",
+        children: [
+            {
+            title: 'All Courses',
+            icon: "ic:sharp-account-circle",
+            path: PATH_PAGE.courses.root,
+        },
+            {
+            title: 'Add Course',
+            icon: "ic:sharp-account-circle",
+            path: PATH_PAGE.courses.new,
+        },
+    ]
+    },
+    {
         header: "Students",
         children: [
             {

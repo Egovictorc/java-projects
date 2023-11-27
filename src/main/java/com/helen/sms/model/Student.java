@@ -27,6 +27,11 @@ public class Student {
     @NotNull
     @NotBlank
     private String firstName;
+
+    @NotNull
+    @NotBlank
+    private String course;
+
     @NotNull
     @NotBlank
     private String lastName;

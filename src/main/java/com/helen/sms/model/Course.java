@@ -25,6 +25,10 @@ public class Course {
     @NotBlank
     private String title;
 
+    @NotNull
+    @NotBlank
+    private String code;
+
     @Min(value = 1, message = "Course credit unit must not be less than 1")
     private int creditUnit;
 

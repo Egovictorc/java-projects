@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useSnackbar } from "notistack";
+import {  useSnackbar } from "notistack";
 
 
 import type { API_ERROR, StudentProps } from '../../../types';
@@ -14,22 +14,28 @@ import { addStudent } from '@/lib/handlers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
+import { useEffect } from 'react';
 
 
 const NewStudentForm = () => {
     const queryClient = useQueryClient();
+    const {enqueueSnackbar} = useSnackbar();
     // Mutations
     const { mutate, isSuccess, isError, error } = useMutation({
-        mutationFn: ({ email, firstName, lastName, course }: StudentProps) => addStudent(email, firstName,
-            lastName, course),
+        mutationFn: (formData: StudentProps) => addStudent(formData),
         onSuccess: () => {
             // Invalidate and refetch
-            queryClient.invalidateQueries({ queryKey: ['students'] })
+            queryClient.invalidateQueries({ queryKey: ['students'] }),
+
+            // show notice / alert
+            enqueueSnackbar("Student added successfully", {variant: "success"})
+
         },
+        
     })
+
     const navigate = useNavigate()
-    const { enqueueSnackbar } = useSnackbar()
-    const SignupSchema = Yup.object().shape({
+    const NewEditStudentSchema = Yup.object().shape({
         firstName: Yup.string()
             .required("First Name is required"),
         lastName: Yup.string()
@@ -37,65 +43,50 @@ const NewStudentForm = () => {
         email: Yup.string()
             .required("Email is required")
             .email("Email must be a valid email address"),
-        course: Yup.string()
-            .min(6, "Course must be at least 6 characters")
-            .required("Course is required"),
+        department: Yup.string()
+            .min(3, "Department must be at least 3 characters")
+            .required("Department is required"),
         // confirmPassword: Yup.string()
-        //     .required("Confirm course is required")
-        // .oneOf([Yup.ref('course'), null], 'Passwords must match'),
-        // .oneOf([Yup.ref("course"), ""], "Passwords must match"),
+        //     .required("Confirm department is required")
+        // .oneOf([Yup.ref('department'), null], 'Passwords must match'),
+        // .oneOf([Yup.ref("department"), ""], "Passwords must match"),
     });
+
 
     const defaultValues: {
         // confirmPassword: string,
         email: string,
         firstName: string,
         lastName: string,
-        course: string,
+        department: string,
         afterSubmit?: string
     } = {
 
         firstName: "",
         lastName: "",
         email: '',
-        course: "",
+        department: "",
         afterSubmit: "",
     };
 
     const methods = useForm<typeof defaultValues>({
-        resolver: yupResolver(SignupSchema),
-        defaultValues,
+        resolver: yupResolver(NewEditStudentSchema),
+        defaultValues: defaultValues,
     });
 
     const {
         setError,
+        setValue,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = methods;
 
+  
     const onSubmit: SubmitHandler<typeof defaultValues> = async (values) => {
         console.log("values ", values)
-        mutate(values)
-        // try {
-        //     addStudent(
-        //         values.email,
-        //         values.firstName,
-        //         values.lastName,
-        //         values.course,
-        //     )
-        // } catch (error) {
-        //     const err = error as API_ERROR;
-        //     //reset();
-        //     setError('afterSubmit', {
-        //         ...err,
-        //         message: err.message,
-        //     });
-        //     enqueueSnackbar({ message: err.message, variant: 'error' });
-        // }
-
-        // navigate(PATH_AFTER_LOGIN);
-        // enqueueSnackbar(message);
-        enqueueSnackbar('Account created successfully');
+     
+            mutate({firstName: values.firstName, lastName: values.lastName, email: values.email, department: values.department})
+            
 
     };
 
@@ -107,7 +98,7 @@ const NewStudentForm = () => {
                     <Terminal className="h-4 w-4" />
                     <AlertTitle>Ooops!</AlertTitle>
                     <AlertDescription>
-                        {String(error)}
+                        {String(error.message)}
                     </AlertDescription>
                 </Alert>
 
@@ -128,7 +119,7 @@ const NewStudentForm = () => {
                 <RHFTextField name="firstName" label="First Name" placeholder={"john"} />
                 <RHFTextField name="lastName" label="Last Name" placeholder={"Doe"} />
                 <RHFTextField name="email" label="Email address" placeholder={"johndoe@gmail.com"} />
-                <RHFTextField name="course" label="Course" />
+                <RHFTextField name="department" label="Department" />
                 <div className="flex justify-between mb-4">
                     <div className="w-1/2">
                         <input type="checkbox" name="remeberMe" />&nbsp;

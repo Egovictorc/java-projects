@@ -9,12 +9,20 @@ export type UserProps = {
     password?: string,
 }
 
+export type CourseProps = {
+    id?: number;
+    title: string;
+    code: string;
+    description: string;
+    creditUnit: numner;
+}
+
 export type StudentProps = {
     id?: number;
     email: string;
     firstName: string;
     lastName: string;
-    course: string,
+    department: string,
 }
 
 export type StaffProps = {

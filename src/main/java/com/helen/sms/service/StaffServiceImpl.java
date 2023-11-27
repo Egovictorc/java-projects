@@ -59,7 +59,7 @@ public class StaffServiceImpl implements StaffService{
             throw new StaffNotFoundException("Staff not found with the id: "+ id);
         }
         Staff existingStaff = optionalStaff.get();
-        BeanUtils.copyProperties(staff, optionalStaff);
-        return staffRepository.save(optionalStaff.get());
+        BeanUtils.copyProperties(staff, existingStaff);
+        return staffRepository.save(existingStaff);
     }
 }

@@ -37,6 +37,8 @@ import { UseMutateFunction, useMutation, useQuery, useQueryClient } from "@tanst
 import { deleteStudent, getStudents } from "@/lib/handlers"
 import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert"
 import { StudentProps } from "types"
+import { PATH_PAGE } from "@/routes/paths"
+import { Link } from "react-router-dom"
 
 
 const getColumns = (mutate: UseMutateFunction<any, Error, number, unknown>): ColumnDef<StudentProps>[]  => {
@@ -98,7 +100,7 @@ const getColumns = (mutate: UseMutateFunction<any, Error, number, unknown>): Col
           </Button>
         )
       },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("firstName")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("firstName")}</div>,
     },
     {
       accessorKey: "lastName",
@@ -113,7 +115,22 @@ const getColumns = (mutate: UseMutateFunction<any, Error, number, unknown>): Col
           </Button>
         )
       },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("lastName")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("lastName")}</div>,
+    },
+    {
+      accessorKey: "department",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Department
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => <div className="capitalize">{row.getValue("department")}</div>,
     },
     {
       id: "actions",
@@ -137,7 +154,7 @@ const getColumns = (mutate: UseMutateFunction<any, Error, number, unknown>): Col
                 Copy student ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>View Student</DropdownMenuItem>
+              <DropdownMenuItem><Link to={PATH_PAGE.students.get(student.id as number)}>Edit Student</Link></DropdownMenuItem>
               <DropdownMenuItem onClick={() => mutate(student.id as number)}>Delete student</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -206,18 +223,7 @@ export default function StudentsTable() {
   }
   return (
     <div className="w-full">
-     
-      {isSuccess && (
-        <Alert>
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>Heads up!</AlertTitle>
-          <AlertDescription>
-            Student added successfully
-          </AlertDescription>
-        </Alert>
-
-      )}
-
+  
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
@@ -243,7 +249,7 @@ export default function StudentsTable() {
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value: number) =>
+                    onCheckedChange={(value: boolean) =>
                       column.toggleVisibility(!!value)
                     }
                   >

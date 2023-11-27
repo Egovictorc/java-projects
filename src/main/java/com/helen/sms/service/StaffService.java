@@ -10,7 +10,7 @@ public interface StaffService {
     public Staff findById(Long id);
     public String deleteById(Long id);
 
-    Staff addStaff(Staff student);
+    Staff addStaff(Staff staff);
 
-    Staff updateStaff(Staff student, Long id);
+    Staff updateStaff(Staff staff, Long id);
 }

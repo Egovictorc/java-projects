@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class StudentDao {
-    private String firstName, lastName, email, course;
+    private String firstName, lastName, email, department;
 }

@@ -15,6 +15,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler({
         StudentNotFoundException.class,
         StaffNotFoundException.class,
+        CourseNotFoundException.class,
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<String> notFound(Exception e, WebRequest request) {
@@ -24,6 +25,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler({
         StudentAlreadyExistException.class,
         StaffAlreadyExistException.class,
+        CourseAlreadyExistException.class,
+
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> badRequest(Exception e, WebRequest request) {
