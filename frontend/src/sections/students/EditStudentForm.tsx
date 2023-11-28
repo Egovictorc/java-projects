@@ -22,7 +22,7 @@ const EditStudentForm = ({ student }: { student: StudentProps }) => {
     const { enqueueSnackbar } = useSnackbar();
     // Mutations
     const { mutate, isSuccess, isError, error } = useMutation({
-        mutationFn: ({id, formData}: {id: number, formData: StudentProps}) => updateStudent(id, formData),
+        mutationFn: ({ id, formData }: { id: number, formData: StudentProps }) => updateStudent(id, formData),
         onSuccess: () => {
             // Invalidate and refetch
             queryClient.invalidateQueries({ queryKey: ['students'] }),
@@ -32,8 +32,8 @@ const EditStudentForm = ({ student }: { student: StudentProps }) => {
         },
         onError: () => {
             // show notice / alert
-            enqueueSnackbar("Error while updating record", { variant: "error" })
-            
+            enqueueSnackbar(String(error), { variant: "error" })
+
         }
 
     })
@@ -47,13 +47,13 @@ const EditStudentForm = ({ student }: { student: StudentProps }) => {
         email: Yup.string()
             .required("Email is required")
             .email("Email must be a valid email address"),
-        department: Yup.string()
-            .min(3, "Department must be at least 3 characters")
-            .required("Department is required"),
+        course: Yup.string()
+            .min(3, "Course must be at least 3 characters")
+            .required("Course is required"),
         // confirmPassword: Yup.string()
-        //     .required("Confirm department is required")
-        // .oneOf([Yup.ref('department'), null], 'Passwords must match'),
-        // .oneOf([Yup.ref("department"), ""], "Passwords must match"),
+        //     .required("Confirm course is required")
+        // .oneOf([Yup.ref('course'), null], 'Passwords must match'),
+        // .oneOf([Yup.ref("course"), ""], "Passwords must match"),
     });
 
 
@@ -62,14 +62,14 @@ const EditStudentForm = ({ student }: { student: StudentProps }) => {
         email: string,
         firstName: string,
         lastName: string,
-        department: string,
+        course: string,
         afterSubmit?: string
     } = {
 
         firstName: "",
         lastName: "",
         email: '',
-        department: "",
+        course: "",
         afterSubmit: "",
     };
 
@@ -87,12 +87,12 @@ const EditStudentForm = ({ student }: { student: StudentProps }) => {
     } = methods;
 
     useEffect(() => {
-           reset(student)
+        reset(student)
     }, [student])
     const onSubmit: SubmitHandler<typeof defaultValues> = async (values) => {
         console.log("values ", values)
 
-        mutate( {id: student?.id as number, formData: {firstName: values.firstName, lastName: values.lastName, email: values.email, department: values.department} })
+        mutate({ id: student?.id as number, formData: { firstName: values.firstName, lastName: values.lastName, email: values.email, course: values.course.trim().toUpperCase(), } })
 
 
 
@@ -100,34 +100,12 @@ const EditStudentForm = ({ student }: { student: StudentProps }) => {
 
     return (
         <div>
-
-            {isError && (
-                <Alert>
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Ooops!</AlertTitle>
-                    <AlertDescription>
-                        {String(error.message)}
-                    </AlertDescription>
-                </Alert>
-
-            )}
-
-            {isSuccess && (
-                <Alert>
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Heads up!</AlertTitle>
-                    <AlertDescription>
-                        Student added successfully
-                    </AlertDescription>
-                </Alert>
-
-            )}
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 {!!errors.afterSubmit && (<p className={"text-red-500 mb-2"}>{errors.afterSubmit.message} </p>)}
                 <RHFTextField name="firstName" label="First Name" placeholder={"john"} />
                 <RHFTextField name="lastName" label="Last Name" placeholder={"Doe"} />
                 <RHFTextField name="email" label="Email address" placeholder={"johndoe@gmail.com"} />
-                <RHFTextField name="department" label="Department" />
+                <RHFTextField name="course" label="Course" />
                 <div className="flex justify-between mb-4">
                     <div className="w-1/2">
                         <input type="checkbox" name="remeberMe" />&nbsp;

@@ -24,17 +24,22 @@ const NewCourseForm = () => {
         mutationFn: (formData: CourseProps) => addCourse(formData),
         onSuccess: () => {
             // Invalidate and refetch
-            queryClient.invalidateQueries({ queryKey: ['students'] }),
+            queryClient.invalidateQueries({ queryKey: ['courses'] }),
 
             // show notice / alert
             enqueueSnackbar("Course added successfully", {variant: "success"})
+
+        },
+        onError: () => {
+            // show notice / alert
+            enqueueSnackbar(String(error), {variant: "error"})
 
         },
         
     })
 
     const navigate = useNavigate()
-    const NewEditCourseSchema = Yup.object().shape({
+    const NewCourseSchema = Yup.object().shape({
         title: Yup.string()
         .required("Course title is required"),
     code: Yup.string()
@@ -55,22 +60,22 @@ const NewCourseForm = () => {
 
     const defaultValues: {
         // confirmPassword: string,
-        email: string,
-        firstName: string,
-        lastName: string,
-        course: string,
+        description: string,
+        title: string,
+        code: string,
+        creditUnit: number,
         afterSubmit?: string
     } = {
 
-        firstName: "",
-        lastName: "",
-        email: '',
-        course: "",
+        title: "",
+        code: "",
+        description: '',
+        creditUnit: 1,
         afterSubmit: "",
     };
 
     const methods = useForm<typeof defaultValues>({
-        resolver: yupResolver(NewEditCourseSchema),
+        resolver: yupResolver(NewCourseSchema),
         defaultValues: defaultValues,
     });
 
@@ -85,7 +90,8 @@ const NewCourseForm = () => {
     const onSubmit: SubmitHandler<typeof defaultValues> = async (values) => {
         console.log("values ", values)
      
-            mutate({firstName: values.firstName, lastName: values.lastName, email: values.email, course: values.course})
+        mutate({  title: values.title, code: values.code, description: values.description, creditUnit: values.creditUnit })
+
             
 
     };
@@ -93,27 +99,6 @@ const NewCourseForm = () => {
     return (
         <div>
 
-            {isError && (
-                <Alert>
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Ooops!</AlertTitle>
-                    <AlertDescription>
-                        {String(error.message)}
-                    </AlertDescription>
-                </Alert>
-
-            )}
-          
-            {isSuccess && (
-                <Alert>
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Heads up!</AlertTitle>
-                    <AlertDescription>
-                        Course added successfully
-                    </AlertDescription>
-                </Alert>
-
-            )}
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 {!!errors.afterSubmit && (<p className={"text-red-500 mb-2"}>{errors.afterSubmit.message} </p>)}
                 <RHFTextField name="title" label="Course Title" placeholder={"Use of English"} />

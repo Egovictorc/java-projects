@@ -1,6 +1,7 @@
 package com.helen.sms.service;
 
 
+import com.helen.sms.dao.StudentDao;
 import com.helen.sms.model.Student;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface StudentService {
     public Student findByEmailIgnoreCase(String email);
     public String deleteById(Long id);
 
-    Student addStudent(Student student);
+    Student addStudent(StudentDao studentDao);
 
-    Student updateStudent(Student student, Long id);
+    Student updateStudent(StudentDao studentDao, Long id);
 }

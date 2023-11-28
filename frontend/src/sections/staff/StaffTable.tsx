@@ -1,4 +1,5 @@
 import * as React from "react"
+import {Link } from "react-router-dom"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -34,12 +35,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { UseMutateFunction, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { deleteStudent, getAllStaff, getStudents } from "@/lib/handlers"
+import { deleteStaff, getAllStaff } from "@/lib/handlers"
 import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert"
-import { StudentProps } from "types"
+import { StaffProps } from "types"
+import { PATH_PAGE } from "@/routes/paths"
 
 
-const getColumns = (mutate: UseMutateFunction<any, Error, number, unknown>): ColumnDef<StudentProps>[]  => {
+const getColumns = (mutate: UseMutateFunction<any, Error, number, unknown>): ColumnDef<StaffProps>[]  => {
   return [
     {
       id: "staff",
@@ -116,6 +118,51 @@ const getColumns = (mutate: UseMutateFunction<any, Error, number, unknown>): Col
       cell: ({ row }) => <div className="lowercase">{row.getValue("lastName")}</div>,
     },
     {
+      accessorKey: "salary",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Salary
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => <div className="lowercase">{row.getValue("salary")}</div>,
+    },
+    {
+      accessorKey: "course",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Teaching
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => <div className="capitalize">{row.getValue("course")}</div>,
+    },
+    {
+      accessorKey: "phoneNumber",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Phone Number
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => <div className="capitalize">{row.getValue("phoneNumber")}</div>,
+    },
+    {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
@@ -137,7 +184,7 @@ const getColumns = (mutate: UseMutateFunction<any, Error, number, unknown>): Col
                 Copy staff ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>View Staff</DropdownMenuItem>
+              <DropdownMenuItem><Link to={PATH_PAGE.staff.get(staff.id as number)}>Edit Staff</Link></DropdownMenuItem>
               <DropdownMenuItem onClick={() => mutate(staff.id as number)}>Delete staff</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -156,7 +203,7 @@ export default function StaffTable() {
   console.log("staff ", staff)
   // Mutations
   const { mutate } = useMutation({
-    mutationFn: deleteStudent,
+    mutationFn: deleteStaff,
     onSuccess: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ['staff'] })
@@ -228,7 +275,7 @@ export default function StaffTable() {
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value: number) =>
+                    onCheckedChange={(value: boolean) =>
                       column.toggleVisibility(!!value)
                     }
                   >

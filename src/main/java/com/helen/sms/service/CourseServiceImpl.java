@@ -1,5 +1,6 @@
 package com.helen.sms.service;
 
+import com.helen.sms.dao.CourseDao;
 import com.helen.sms.exception.CourseAlreadyExistException;
 import com.helen.sms.exception.CourseNotFoundException;
 import com.helen.sms.model.Course;
@@ -42,24 +43,26 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public Course addCourse(Course course) {
+    public Course addCourse(CourseDao courseDao) {
         //check if course already exists
-        Optional<Course> optionalCourse = courseRepository.findByCodeIgnoreCase(course.getCode());
+        Optional<Course> optionalCourse = courseRepository.findByCodeIgnoreCase(courseDao.code().trim());
         if (optionalCourse.isPresent()) {
-            throw new CourseAlreadyExistException("Course already exists with the email: "+ course.getCode());
+            throw new CourseAlreadyExistException("Course already exists with the code: "+ courseDao.code());
         }
+        Course course = new Course();
+        BeanUtils.copyProperties(courseDao, course);
         return courseRepository.save(course);
     }
 
     @Override
-    public Course updateCourse(Course course, Long id) {
+    public Course updateCourse(CourseDao courseDao, Long id) {
         //check if course already exists
         Optional<Course> optionalCourse = courseRepository.findById(id);
         if (optionalCourse.isEmpty()) {
             throw new CourseNotFoundException("Course not found with the id: "+ id);
         }
         Course existingCourse = optionalCourse.get();
-        BeanUtils.copyProperties(course, existingCourse);
+        BeanUtils.copyProperties(courseDao, existingCourse);
         return courseRepository.save(existingCourse);
     }
 }

@@ -118,19 +118,19 @@ const getColumns = (mutate: UseMutateFunction<any, Error, number, unknown>): Col
       cell: ({ row }) => <div className="capitalize">{row.getValue("lastName")}</div>,
     },
     {
-      accessorKey: "department",
+      accessorKey: "course",
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Department
+            Course
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
-      cell: ({ row }) => <div className="capitalize">{row.getValue("department")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("course")}</div>,
     },
     {
       id: "actions",

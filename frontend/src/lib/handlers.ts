@@ -9,17 +9,31 @@ export const getAllStaff = async (): Promise<StaffProps[]> => {
 
 }
 
+export const getStaffById = async (id: number): Promise<StaffProps> => {
+    const response = await axiosInstance.get(PATH_API.staff.get(id))
+    return response.data;
+
+}
+
 export const deleteStaff = async (id: number ) => {
     const response = await axiosInstance.delete(PATH_API.staff.delete(id))
     return response.data;
 }
 
 export const addStaff = async(formData: StaffProps) => {
-    const response = await axiosInstance.post(PATH_API.students.root, formData);
+    const response = await axiosInstance.post(PATH_API.staff.root, formData);
 
     const newStudent: StaffProps = response.data;
     return newStudent;
 }
+
+export const updateStaff = async(id: number, formData: StaffProps) => {
+    const response = await axiosInstance.put(PATH_API.staff.update(id), formData);
+
+    const updatedStaff: StaffProps = response.data;
+    return updatedStaff;
+}
+
 
 // student actions
 export const getStudents = async (): Promise<StudentProps[]> => {
@@ -66,7 +80,7 @@ export const getCourses = async (): Promise<CourseProps[]> => {
 
 }
 
-export const getCourseById = async (id: number): Promise<StudentProps> => {
+export const getCourseById = async (id: number): Promise<CourseProps> => {
     const response = await axiosInstance.get(PATH_API.courses.get(id))
     return response.data;
 

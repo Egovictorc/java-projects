@@ -1,5 +1,6 @@
 package com.helen.sms.service;
 
+import com.helen.sms.dao.StaffDao;
 import com.helen.sms.exception.StaffAlreadyExistException;
 import com.helen.sms.exception.StaffNotFoundException;
 import com.helen.sms.model.Staff;
@@ -42,24 +43,26 @@ public class StaffServiceImpl implements StaffService{
     }
 
     @Override
-    public Staff addStaff(Staff staff) {
+    public Staff addStaff(StaffDao staffDao) {
         //check if staff already exists
-        Optional<Staff> optionalStaff = staffRepository.findByEmailIgnoreCase(staff.getEmail());
+        Optional<Staff> optionalStaff = staffRepository.findByEmailIgnoreCase(staffDao.email().trim());
         if (optionalStaff.isPresent()) {
-            throw new StaffAlreadyExistException("Staff already exists with the email: "+ staff.getEmail());
+            throw new StaffAlreadyExistException("Staff already exists with the email: "+ staffDao.email());
         }
+        Staff staff = new Staff();
+        BeanUtils.copyProperties(staffDao, staff);
         return staffRepository.save(staff);
     }
 
     @Override
-    public Staff updateStaff(Staff staff, Long id) {
+    public Staff updateStaff(StaffDao staffDao, Long id) {
         //check if staff already exists
         Optional<Staff> optionalStaff = staffRepository.findById(id);
         if (optionalStaff.isEmpty()) {
             throw new StaffNotFoundException("Staff not found with the id: "+ id);
         }
         Staff existingStaff = optionalStaff.get();
-        BeanUtils.copyProperties(staff, existingStaff);
+        BeanUtils.copyProperties(staffDao, existingStaff);
         return staffRepository.save(existingStaff);
     }
 }

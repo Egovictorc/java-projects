@@ -1,11 +1,12 @@
 # # CREATE A NEW course
-# POST http://localhost:8080/api/v1/course
+# POST http://localhost:8080/api/v1/courses
 # Content-Type: application/json
 
 # {
-#       "course_name": "Introduction to English",
-#       "credit_unit": 2,
-#       "course_code": "GST 101",
+#       "title": "Introduction to English",
+#       "creditUnit": 2,
+#       "code": "GST 101",
+#       "description": "Description for use of English"
 # }
 
 
@@ -16,20 +17,21 @@
 
 
 # # GET course BY ID
-GET http://localhost:8080/api/v1/courses/1
-Content-Type: application/json
+# GET http://localhost:8080/api/v1/courses/1
+# Content-Type: application/json
 
 
 
 # # UPDATE course BY ID
-# PUT http://localhost:8080/api/v1/course/1
-# Content-Type: application/json
+PUT http://localhost:8080/api/v1/courses/1
+Content-Type: application/json
 
-# {
-#       "course_name": "Introduction to English",
-#       "credit_unit": 2,
-#       "course_code": "GST 101",
-# }
+ {
+      "title": "Introduction to English 2",
+      "creditUnit": 2,
+      "code": "GST 102",
+      "description": "Description for use of English 2"
+}
 
 
 

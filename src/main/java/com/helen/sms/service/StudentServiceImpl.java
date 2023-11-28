@@ -1,5 +1,6 @@
 package com.helen.sms.service;
 
+import com.helen.sms.dao.StudentDao;
 import com.helen.sms.exception.StudentAlreadyExistException;
 import com.helen.sms.exception.StudentNotFoundException;
 import com.helen.sms.model.Student;
@@ -60,18 +61,20 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public Student addStudent(Student student) {
+    public Student addStudent(StudentDao studentDao) {
         //check if student already exists
-        Optional<Student> optionalStudent = studentRepository.findByEmailIgnoreCase(student.getEmail());
+        Optional<Student> optionalStudent = studentRepository.findByEmailIgnoreCase(studentDao.email().trim());
         if (optionalStudent.isPresent()) {
-            LOGGER.info("Student already exist with the email: {}", student.getEmail());
-            throw new StudentAlreadyExistException("Student already exists with the email: "+ student.getEmail());
+            LOGGER.info("Student already exist with the email: {}", studentDao.email());
+            throw new StudentAlreadyExistException("Student already exists with the email: "+ studentDao.email());
         }
+        Student student = new Student();
+        BeanUtils.copyProperties(studentDao, student);
         return studentRepository.save(student);
     }
 
     @Override
-    public Student updateStudent(Student student, Long id) {
+    public Student updateStudent(StudentDao studentDao, Long id) {
         //check if student already exists
         Optional<Student> optionalStudent = studentRepository.findById(id);
         if (optionalStudent.isEmpty()) {
@@ -79,10 +82,7 @@ public class StudentServiceImpl implements StudentService{
             throw new StudentNotFoundException("Student not found with the id: "+ id);
         }
         Student existingStudent = optionalStudent.get();
-        existingStudent.setEmail(student.getEmail());
-        existingStudent.setLastName(student.getLastName());
-        existingStudent.setFirstName(student.getFirstName());
-        existingStudent.setCourse(student.getCourse());
+        BeanUtils.copyProperties(studentDao, existingStudent);
         return studentRepository.save(existingStudent);
     }
 }

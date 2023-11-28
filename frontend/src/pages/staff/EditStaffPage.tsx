@@ -3,9 +3,25 @@ import {Helmet } from "react-helmet"
 
 import { SectionHeading } from '@/components/headings'
 import { COMPANY_INFO } from '@/config-global'
-import { NewStaffForm } from '@/sections/staff'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useParams } from 'react-router-dom'
+import EditStaffForm from '@/sections/staff/EditStaffForm'
+import { getStaffById } from '@/lib/handlers'
 
-const AddStaffPage = () => {
+const EditStaffPage = () => {
+    const queryClient = useQueryClient();
+    const { id } = useParams();
+    // Queries
+    const { data: staff, isLoading, isSuccess, isError, error } = useQuery({ queryKey: ['staff'], queryFn: () => getStaffById(Number(id)) })
+
+    console.log("staff ", staff)
+
+    if(isLoading ) {
+        return (<p> fetching staff info ...</p>)
+    }
+    if(!staff) {
+        return <p>Staff does not exist</p>
+    }
     return (
         <>
         <Helmet>
@@ -13,14 +29,14 @@ const AddStaffPage = () => {
             <title>Edit Staff | {COMPANY_INFO.name}</title>
         </Helmet>
         <div className='p-5'>
-            <SectionHeading title="Add Staff" />
+            <SectionHeading title="Edit Staff" />
             <div className='mt-5 max-w-screen-md'>
 
-            <NewStaffForm />
+            <EditStaffForm staff={staff} />
             </div>
         </div>
         </>
     )
 }
 
-export default AddStaffPage
+export default EditStaffPage

@@ -11,22 +11,24 @@ import type { API_ERROR, StaffProps } from '../../../types';
 
 // components
 import FormProvider, { RHFPasswordField, RHFTextField } from "../../components/hook-form"
-import { addStaff } from '@/lib/handlers';
+import { addStaff, updateStaff } from '@/lib/handlers';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
+import { useEffect } from 'react';
 
 
-const NewStaffForm = () => {
+const EditStaffForm = ({staff}: {staff: StaffProps}) => {
     const queryClient = useQueryClient();
+    const { enqueueSnackbar } = useSnackbar();
     // Mutations
     const { mutate, isSuccess, isError, error } = useMutation({
-        mutationFn: (formData: StaffProps) => addStaff(formData),
+        mutationFn:  ({id, formData}: {id: number, formData: StaffProps})  => updateStaff(id, formData),
         onSuccess: () => {
             // Invalidate and refetch
             queryClient.invalidateQueries({ queryKey: ['staff'] })
-            enqueueSnackbar("Staff added successfully", {variant: "success"});
+            enqueueSnackbar('Staff record updated successfully', {variant: "success"});
         },
         onError: () => {
             enqueueSnackbar(String(error), {variant: "error"});
@@ -35,7 +37,6 @@ const NewStaffForm = () => {
 
 
     const navigate = useNavigate()
-    const { enqueueSnackbar } = useSnackbar()
     const StaffSchema = Yup.object().shape({
         firstName: Yup.string()
             .required("First Name is required"),
@@ -86,13 +87,18 @@ const NewStaffForm = () => {
 
     const {
         setError,
+        reset,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = methods;
 
+    useEffect( () => {
+        reset(staff);
+    },[staff])
+
     const onSubmit: SubmitHandler<typeof defaultValues> = async (values) => {
         console.log("values ", values)
-        mutate(values)
+        mutate( {id: staff?.id as number, formData: {firstName: values.firstName, lastName: values.lastName, email: values.email, course: values.course.trim().toUpperCase(),  salary: values.salary, phoneNumber: values.phoneNumber} })
         // try {
         //     addStaff(
         //         values.email,
@@ -112,34 +118,12 @@ const NewStaffForm = () => {
 
         // navigate(PATH_AFTER_LOGIN);
         // enqueueSnackbar(message);
-        // enqueueSnackbar('Account created successfully');
 
     };
 
     return (
         <div>
-{/* 
-            {isError && (
-                <Alert>
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Ooops!</AlertTitle>
-                    <AlertDescription>
-                        {String(error)}
-                    </AlertDescription>
-                </Alert>
 
-            )}
-
-            {isSuccess && (
-                <Alert>
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Heads up!</AlertTitle>
-                    <AlertDescription>
-                        Staff added successfully
-                    </AlertDescription>
-                </Alert>
-
-            )} */}
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 {!!errors.afterSubmit && (<p className={"text-red-500 mb-2"}>{errors.afterSubmit.message} </p>)}
                 <RHFTextField name="firstName" label="First Name" placeholder={"john"} />
@@ -160,11 +144,11 @@ const NewStaffForm = () => {
                     type="submit"
                     disabled={isSubmitting}
                 >
-                    {isSubmitting ? "Please wait" : "Add now"}
+                    {isSubmitting ? "Please wait" : "Update now"}
                 </button>
             </FormProvider>
         </div>
     );
 }
 
-export default NewStaffForm
+export default EditStaffForm

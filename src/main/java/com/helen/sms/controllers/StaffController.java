@@ -1,6 +1,8 @@
 package com.helen.sms.controllers;
 
+import com.helen.sms.dao.StaffDao;
 import com.helen.sms.model.Staff;
+import com.helen.sms.model.Student;
 import com.helen.sms.service.StaffService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,9 @@ public class StaffController {
     }
 
     @PostMapping
-    public ResponseEntity<Staff> addStaff(@Valid @RequestBody Staff staff) {
+    public ResponseEntity<Staff> addStaff(@Valid @RequestBody StaffDao staffDao) {
     //public ResponseEntity<Staff> addStaff(@RequestBody Staff staff) {
-        Staff newStaff = staffService.addStaff(staff);
+        Staff newStaff = staffService.addStaff(staffDao);
         List<Staff> staffs = staffService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(newStaff);
     }
@@ -37,8 +39,13 @@ public class StaffController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Staff> UpdateStaff(@PathVariable Long id, @Valid @RequestBody Staff staff) {
-        Staff updatedStaff = staffService.updateStaff(staff, id);
+    public ResponseEntity<Staff> UpdateStaff(@PathVariable Long id, @Valid @RequestBody StaffDao staffDao) {
+        Staff updatedStaff = staffService.updateStaff(staffDao, id);
         return ResponseEntity.status(HttpStatus.OK).body(updatedStaff);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Staff> getStaffById(@PathVariable Long id) {
+        Staff existingStaff = staffService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(existingStaff);
     }
 }

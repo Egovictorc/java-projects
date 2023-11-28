@@ -22,7 +22,7 @@ export type StudentProps = {
     email: string;
     firstName: string;
     lastName: string;
-    department: string,
+    course: string,
 }
 
 export type StaffProps = {
@@ -32,7 +32,7 @@ export type StaffProps = {
     lastName: string;
     phoneNumber: number,
     salary: number,
-    department: string,
+    course: string,
 }
 
 export type API_ERROR = { status: string; message: string };

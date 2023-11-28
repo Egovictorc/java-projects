@@ -32,14 +32,14 @@ const EditCourseForm = ({ course }: { course: CourseProps }) => {
         },
         onError: () => {
             // show notice / alert
-            enqueueSnackbar("Error while updating record", { variant: "error" })
+            enqueueSnackbar(String(error), { variant: "error" })
 
         }
 
     })
 
     const navigate = useNavigate()
-    const NewEditCourseSchema = Yup.object().shape({
+    const EditCourseSchema = Yup.object().shape({
         title: Yup.string()
             .required("Course title is required"),
         code: Yup.string()
@@ -63,7 +63,7 @@ const EditCourseForm = ({ course }: { course: CourseProps }) => {
         description: string,
         title: string,
         code: string,
-        creditUnit: string,
+        creditUnit: number,
         afterSubmit?: string
     } = {
 
@@ -75,7 +75,7 @@ const EditCourseForm = ({ course }: { course: CourseProps }) => {
     };
 
     const methods = useForm<typeof defaultValues>({
-        resolver: yupResolver(NewEditCourseSchema),
+        resolver: yupResolver(EditCourseSchema),
         defaultValues,
     });
 
@@ -93,36 +93,13 @@ const EditCourseForm = ({ course }: { course: CourseProps }) => {
     const onSubmit: SubmitHandler<typeof defaultValues> = async (values) => {
         console.log("values ", values)
 
-        mutate({ id: course?.id as number, formData: { title: values.title, code: values.code, description: values.description, course: values.course, } })
-
-
+        mutate({ id: course?.id as number, formData: { title: values.title, code: values.code, description: values.description, creditUnit: values.creditUnit } })
 
     };
 
     return (
         <div>
 
-            {isError && (
-                <Alert>
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Ooops!</AlertTitle>
-                    <AlertDescription>
-                        {String(error.message)}
-                    </AlertDescription>
-                </Alert>
-
-            )}
-
-            {isSuccess && (
-                <Alert>
-                    <Terminal className="h-4 w-4" />
-                    <AlertTitle>Heads up!</AlertTitle>
-                    <AlertDescription>
-                        Course added successfully
-                    </AlertDescription>
-                </Alert>
-
-            )}
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 {!!errors.afterSubmit && (<p className={"text-red-500 mb-2"}>{errors.afterSubmit.message} </p>)}
                 <RHFTextField name="title" label="Course Title" placeholder={"Use of English"} />

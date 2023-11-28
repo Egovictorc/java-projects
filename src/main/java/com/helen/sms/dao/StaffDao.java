@@ -1,11 +1,11 @@
 package com.helen.sms.dao;
 
-import lombok.Data;
-
-public record StudentDao(
+public record StaffDao(
         String firstName,
         String lastName,
         String email,
-        String course
+        String course,
+        double salary,
+        String phoneNumber
 ) {
 }

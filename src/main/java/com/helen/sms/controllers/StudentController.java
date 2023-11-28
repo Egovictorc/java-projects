@@ -1,5 +1,6 @@
 package com.helen.sms.controllers;
 
+import com.helen.sms.dao.StudentDao;
 import com.helen.sms.model.Student;
 import com.helen.sms.service.StudentService;
 import jakarta.validation.Valid;
@@ -30,9 +31,9 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> addStudent(@Valid @RequestBody Student student) {
+    public ResponseEntity<Student> addStudent(@Valid @RequestBody StudentDao studentDao) {
         //public ResponseEntity<Student> addStudent(@RequestBody Student student) {
-        Student newStudent = studentService.addStudent(student);
+        Student newStudent = studentService.addStudent(studentDao);
         List<Student> students = studentService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(newStudent);
     }
@@ -44,8 +45,8 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> UpdateStudent(@PathVariable Long id, @Valid @RequestBody Student student) {
-        Student updatedStudent = studentService.updateStudent(student, id);
+    public ResponseEntity<Student> UpdateStudent(@PathVariable Long id, @Valid @RequestBody StudentDao studentDao) {
+        Student updatedStudent = studentService.updateStudent(studentDao, id);
         return ResponseEntity.status(HttpStatus.OK).body(updatedStudent);
     }
 

@@ -6,16 +6,16 @@ import { COMPANY_INFO } from '@/config-global'
 import { EditCourseForm } from '@/sections/courses'
 import { useLocation, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getStudentById, getStudents } from '@/lib/handlers';
-import { StudentProps } from 'types';
+import { getCourseById, getStudentById, getStudents } from '@/lib/handlers';
+import { CourseProps, StudentProps } from 'types';
 
 const EditCoursePage = () => {
 
     const { id } = useParams();
     const queryClient = useQueryClient();
     // Queries
-    const { data: student, isLoading, isSuccess, isError, error } = useQuery({ queryKey: ['student'], queryFn: () => getStudentById(Number(id)) })
-    console.log("student ", student)
+    const { data: course, isLoading, isSuccess, isError, error } = useQuery({ queryKey: ['courses'], queryFn: () => getCourseById(Number(id)) })
+    console.log("course ", course)
     // Mutations
 
     return (
@@ -27,7 +27,7 @@ const EditCoursePage = () => {
             <div className='p-5'>
                 <SectionHeading title="Update Course Record" />
                 <div className='mt-5 max-w-screen-md'>
-                    <EditCourseForm student={student as StudentProps} />
+                    <EditCourseForm course={course as CourseProps} />
                 </div>
             </div>
         </>

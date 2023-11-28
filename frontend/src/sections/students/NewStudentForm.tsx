@@ -14,7 +14,6 @@ import { addStudent } from '@/lib/handlers';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
-import { useEffect } from 'react';
 
 
 const NewStudentForm = () => {
@@ -31,6 +30,9 @@ const NewStudentForm = () => {
             enqueueSnackbar("Student added successfully", {variant: "success"})
 
         },
+        onError: () => {
+            enqueueSnackbar(String(error), {variant: "error"});
+        }
         
     })
 
@@ -43,13 +45,13 @@ const NewStudentForm = () => {
         email: Yup.string()
             .required("Email is required")
             .email("Email must be a valid email address"),
-        department: Yup.string()
-            .min(3, "Department must be at least 3 characters")
-            .required("Department is required"),
+        course: Yup.string()
+            .min(3, "Course must be at least 3 characters")
+            .required("Course is required"),
         // confirmPassword: Yup.string()
-        //     .required("Confirm department is required")
-        // .oneOf([Yup.ref('department'), null], 'Passwords must match'),
-        // .oneOf([Yup.ref("department"), ""], "Passwords must match"),
+        //     .required("Confirm course is required")
+        // .oneOf([Yup.ref('course'), null], 'Passwords must match'),
+        // .oneOf([Yup.ref("course"), ""], "Passwords must match"),
     });
 
 
@@ -58,14 +60,14 @@ const NewStudentForm = () => {
         email: string,
         firstName: string,
         lastName: string,
-        department: string,
+        course: string,
         afterSubmit?: string
     } = {
 
         firstName: "",
         lastName: "",
         email: '',
-        department: "",
+        course: "",
         afterSubmit: "",
     };
 
@@ -85,7 +87,7 @@ const NewStudentForm = () => {
     const onSubmit: SubmitHandler<typeof defaultValues> = async (values) => {
         console.log("values ", values)
      
-            mutate({firstName: values.firstName, lastName: values.lastName, email: values.email, department: values.department})
+            mutate({firstName: values.firstName, lastName: values.lastName, email: values.email, course: values.course.toUpperCase()})
             
 
     };
@@ -93,12 +95,12 @@ const NewStudentForm = () => {
     return (
         <div>
 
-            {isError && (
+            {/* {isError && (
                 <Alert>
                     <Terminal className="h-4 w-4" />
                     <AlertTitle>Ooops!</AlertTitle>
                     <AlertDescription>
-                        {String(error.message)}
+                    {String(error)}
                     </AlertDescription>
                 </Alert>
 
@@ -113,13 +115,13 @@ const NewStudentForm = () => {
                     </AlertDescription>
                 </Alert>
 
-            )}
+            )} */}
             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 {!!errors.afterSubmit && (<p className={"text-red-500 mb-2"}>{errors.afterSubmit.message} </p>)}
                 <RHFTextField name="firstName" label="First Name" placeholder={"john"} />
                 <RHFTextField name="lastName" label="Last Name" placeholder={"Doe"} />
                 <RHFTextField name="email" label="Email address" placeholder={"johndoe@gmail.com"} />
-                <RHFTextField name="department" label="Department" />
+                <RHFTextField name="course" label="Course" />
                 <div className="flex justify-between mb-4">
                     <div className="w-1/2">
                         <input type="checkbox" name="remeberMe" />&nbsp;

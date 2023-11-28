@@ -1,5 +1,6 @@
 package com.helen.sms.controllers;
 
+import com.helen.sms.dao.CourseDao;
 import com.helen.sms.model.Course;
 import com.helen.sms.service.CourseService;
 import jakarta.validation.Valid;
@@ -23,9 +24,9 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<Course> addCourse(@Valid @RequestBody Course course) {
+    public ResponseEntity<Course> addCourse(@Valid @RequestBody CourseDao courseDao) {
     //public ResponseEntity<Course> addCourse(@RequestBody Course course) {
-        Course newCourse = courseService.addCourse(course);
+        Course newCourse = courseService.addCourse(courseDao);
         List<Course> courses = courseService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(newCourse);
     }
@@ -37,8 +38,8 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Course> UpdateCourse(@PathVariable Long id, @Valid @RequestBody Course course) {
-        Course updatedCourse = courseService.updateCourse(course, id);
+    public ResponseEntity<Course> UpdateCourse(@PathVariable Long id, @Valid @RequestBody CourseDao courseDao) {
+        Course updatedCourse = courseService.updateCourse(courseDao, id);
         return ResponseEntity.status(HttpStatus.OK).body(updatedCourse);
     }
 

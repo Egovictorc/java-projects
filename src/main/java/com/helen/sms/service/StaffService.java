@@ -1,6 +1,7 @@
 package com.helen.sms.service;
 
 
+import com.helen.sms.dao.StaffDao;
 import com.helen.sms.model.Staff;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface StaffService {
     public Staff findById(Long id);
     public String deleteById(Long id);
 
-    Staff addStaff(Staff staff);
+    Staff addStaff(StaffDao staffDao);
 
-    Staff updateStaff(Staff staff, Long id);
+    Staff updateStaff(StaffDao staffDao, Long id);
 }

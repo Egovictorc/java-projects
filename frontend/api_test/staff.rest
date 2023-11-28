@@ -3,11 +3,12 @@
 # Content-Type: application/json
 
 # {
-#       "first_name": "emeka",
-#       "last_name": "Anyim",
-#       "phone": 9023212125,
+#       "firstName": "emeka",
+#       "lastName": "Anyim",
+#       "phoneNumber": 9023212125,
 #       "email": "emekaanyim@gmail.com",
-#       "level": 10
+#       "salary": 150000,
+#       "course": "CSC 201"
 # }
 
 
@@ -24,16 +25,17 @@
 
 
 # # UPDATE STAFF BY ID
-# PUT http://localhost:8080/api/v1/staff/1
-# Content-Type: application/json
+PUT http://localhost:8080/api/v1/staff/102
+Content-Type: application/json
 
-# {
-#       "first_name": "emeka",
-#       "last_name": "Anyim",
-#       "phone": 9023212125,
-#       "email": "emekaanyim@gmail.com",
-#       "level": 9
-# }
+{
+      "firstName": "emeka",
+      "lastName": "Anyim",
+      "phoneNumber": 9023212125,
+      "email": "emekaanyim@gmail.com",
+      "salary": 150000,
+      "course": "CSC 201"
+}
 
 
 

@@ -2,6 +2,7 @@ package com.helen.sms.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -33,14 +34,12 @@ public class Staff {
 
     @NotNull
     @NotBlank
-    private String department;
+    private String course;
 
     @NotNull
-    @NotBlank
-    private long phoneNumber;
+    private String phoneNumber;
 
     @NotNull
-    @NotBlank
     private double salary;
 
     @CreationTimestamp

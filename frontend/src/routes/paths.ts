@@ -21,7 +21,7 @@ export const PATH_PAGE = {
     staff: {
         root: path("/", "staff"),
         new: path("/", "staff/add-staff"),
-        get: (id: number) => path(API_ROOT, `/staff/${id}`),
+        get: (id: number) => path("/", `staff/${id}`),
         edit: path("/", `staff/:id`),
     },
    
